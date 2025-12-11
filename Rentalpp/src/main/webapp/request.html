@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rental Requests - Bhadasewa</title>
+<style>
+  * { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  body { 
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    color: #333;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Subtle background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(74, 108, 247, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 85% 30%, rgba(74, 108, 247, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 50% 80%, rgba(74, 108, 247, 0.05) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Floating circles decoration */
+  .floating-circle {
+    position: fixed;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(74, 108, 247, 0.08), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .circle-1 {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: 5%;
+    animation: float 20s infinite ease-in-out;
+  }
+
+  .circle-2 {
+    width: 150px;
+    height: 150px;
+    bottom: 15%;
+    right: 8%;
+    animation: float 25s infinite ease-in-out reverse;
+  }
+
+  .circle-3 {
+    width: 100px;
+    height: 100px;
+    top: 60%;
+    left: 15%;
+    animation: float 15s infinite ease-in-out;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    33% {
+      transform: translateY(-20px) translateX(10px);
+    }
+    66% {
+      transform: translateY(10px) translateX(-10px);
+    }
+  }
+
+  /* ---------------- NAVBAR ---------------- */
+  .navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  }
+
+  .logo {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.5px;
+  }
+
+  .logo::before {
+    content: '🏠';
+    font-size: 28px;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .nav-btn {
+    padding: 10px 22px;
+    background: #f0f4ff;
+    color: #4a6cf7;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(74, 108, 247, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .nav-btn:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 108, 247, 0.3);
+  }
+
+  .nav-btn:hover::after {
+    opacity: 1;
+  }
+
+  .nav-btn span {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Notification Badge */
+  .notification-badge {
+    position: relative;
+  }
+
+  .badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(90deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+    animation: pulse 2s infinite;
+    z-index: 10;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  /* Main Container */
+  .container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Page Header */
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeInDown 0.6s ease-out;
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .page-header h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #1a1a2e 0%, #4a6cf7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-header p {
+    color: #666;
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Stats Cards */
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .stat-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+
+  .stat-card.total::before {
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+  }
+
+  .stat-card.pending::before {
+    background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+  }
+
+  .stat-card.approved::before {
+    background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-number {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .stat-card.total .stat-number {
+    color: #4a6cf7;
+  }
+
+  .stat-card.pending .stat-number {
+    color: #f39c12;
+  }
+
+  .stat-card.approved .stat-number {
+    color: #27ae60;
+  }
+
+  .stat-label {
+    color: #666;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+  }
+
+  .tab-btn {
+    padding: 12px 28px;
+    background: #f0f4ff;
+    color: #4a6cf7;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border: 1.5px solid #e1e7ff;
+  }
+
+  .tab-btn:hover {
+    background: #4a6cf7;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 108, 247, 0.2);
+  }
+
+  .tab-btn.active {
+    background: #4a6cf7;
+    color: white;
+    box-shadow: 0 4px 12px rgba(74, 108, 247, 0.3);
+  }
+
+  /* Requests List */
+  .requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    animation: fadeInUp 0.6s ease-out 0.6s both;
+  }
+
+  .request-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .request-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+
+  .request-card.pending::before {
+    background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+  }
+
+  .request-card.approved::before {
+    background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
+  }
+
+  .request-card.rejected::before {
+    background: linear-gradient(90deg, #ff6b6b 0%, #ee5a52 100%);
+  }
+
+  .request-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .request-info h3 {
+    font-size: 24px;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .request-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .meta-item i {
+    color: #4a6cf7;
+    width: 16px;
+  }
+
+  .status-badge {
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .status-pending {
+    background: rgba(243, 156, 18, 0.1);
+    color: #f39c12;
+    border: 1px solid rgba(243, 156, 18, 0.3);
+  }
+
+  .status-approved {
+    background: rgba(39, 174, 96, 0.1);
+    color: #27ae60;
+    border: 1px solid rgba(39, 174, 96, 0.3);
+  }
+
+  .status-rejected {
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.3);
+  }
+
+  .request-body {
+    margin: 25px 0;
+    padding: 25px;
+    background: #f8faff;
+    border-radius: 15px;
+    border: 1px solid #e1e7ff;
+  }
+
+  .post-details {
+    margin-bottom: 20px;
+  }
+
+  .post-details h4 {
+    font-size: 18px;
+    color: #1a1a2e;
+    margin-bottom: 15px;
+    font-weight: 600;
+  }
+
+  .post-details p {
+    color: #666;
+    font-size: 15px;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .post-details p i {
+    color: #4a6cf7;
+    width: 18px;
+    text-align: center;
+  }
+
+  .requester-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e7ff;
+  }
+
+  .requester-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4a6cf7 0%, #7b64ff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+  }
+
+  .requester-details h5 {
+    font-size: 18px;
+    color: #1a1a2e;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+
+  .requester-details p {
+    color: #666;
+    font-size: 14px;
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .requester-details p i {
+    color: #4a6cf7;
+    width: 16px;
+  }
+
+  .message-box {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e1e7ff;
+  }
+
+  .message-box p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .request-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.3px;
+    text-decoration: none;
+  }
+
+  .action-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .action-btn:hover::after {
+    opacity: 1;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-3px);
+  }
+
+  .action-btn span {
+    position: relative;
+    z-index: 2;
+  }
+
+  .accept-btn { 
+    background: linear-gradient(90deg, #27ae60 0%, #1e8449 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+  }
+
+  .accept-btn::after {
+    background: linear-gradient(90deg, #219653 0%, #186138 100%);
+  }
+
+  .accept-btn:hover {
+    box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4);
+  }
+  
+  .decline-btn { 
+    background: linear-gradient(90deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  }
+
+  .decline-btn::after {
+    background: linear-gradient(90deg, #ee5a52 0%, #d63031 100%);
+  }
+
+  .decline-btn:hover {
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+  }
+
+  .view-btn { 
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+  }
+
+  .view-btn::after {
+    background: linear-gradient(90deg, #3a5ce5 0%, #6a54e5 100%);
+  }
+
+  .view-btn:hover {
+    box-shadow: 0 8px 20px rgba(74, 108, 247, 0.4);
+  }
+
+  .message-btn { 
+    background: linear-gradient(90deg, #8e44ad 0%, #9b59b6 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+  }
+
+  .message-btn::after {
+    background: linear-gradient(90deg, #7d3c98 0%, #884ea0 100%);
+  }
+
+  .message-btn:hover {
+    box-shadow: 0 8px 20px rgba(142, 68, 173, 0.4);
+  }
+
+  /* Loading State */
+  .loading {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #f0f4ff;
+    border-top: 5px solid #4a6cf7;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 25px;
+  }
+
+  .loading p {
+    color: #4a6cf7;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    margin-top: 30px;
+  }
+
+  .empty-state i {
+    font-size: 72px;
+    color: #4a6cf7;
+    margin-bottom: 25px;
+    opacity: 0.7;
+  }
+
+  .empty-state h3 {
+    font-size: 28px;
+    color: #1a1a2e;
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+
+  .empty-state p {
+    color: #666;
+    font-size: 18px;
+    max-width: 500px;
+    margin: 0 auto 30px;
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 25px;
+    color: #777;
+    font-size: 14px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.9);
+    margin-top: 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .container {
+      max-width: 95%;
+    }
+    
+    .stats-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 16px 25px;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .nav-buttons {
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 20px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+    }
+
+    .stats-container {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .request-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .request-actions {
+      flex-direction: column;
+    }
+
+    .action-btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .tabs {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .navbar {
+      padding: 12px 15px;
+    }
+
+    .logo {
+      font-size: 18px;
+    }
+
+    .nav-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+    }
+
+    .page-header p {
+      font-size: 16px;
+    }
+
+    .request-card {
+      padding: 20px 15px;
+    }
+
+    .request-info h3 {
+      font-size: 20px;
+    }
+
+    .requester-info {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Floating circles -->
+<div class="floating-circle circle-1"></div>
+<div class="floating-circle circle-2"></div>
+<div class="floating-circle circle-3"></div>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="logo">Bhada Sewa</div>
+  <div class="nav-buttons">
+    
+    <a href="post.html" class="nav-btn"><i class="fas fa-plus-circle"></i> Create Post</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i> Profile</a>
+    <a href="request.html" class="nav-btn notification-badge">
+      <i class="fas fa-bell"></i>
+      <span id="notificationCount" class="badge" style="display:none;">0</span>
+    </a>
+    <a href="login.html" class="nav-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</div>
+
+<!-- Main Container -->
+<div class="container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1><i class="fas fa-inbox"></i> Rental Requests</h1>
+    <p>Manage and respond to booking requests from renters</p>
+  </div>
+
+  <!-- Loading State -->
+  <div id="loadingState" class="loading">
+    <div class="loading-spinner"></div>
+    <p>Loading your requests...</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div id="statsContainer" class="stats-container" style="display:none;">
+    <div class="stat-card total">
+      <div class="stat-number" id="totalRequests">0</div>
+      <div class="stat-label">Total Requests</div>
+    </div>
+    <div class="stat-card pending">
+      <div class="stat-number" id="pendingRequests">0</div>
+      <div class="stat-label">Pending</div>
+    </div>
+    <div class="stat-card approved">
+      <div class="stat-number" id="approvedRequests">0</div>
+      <div class="stat-label">Approved</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div id="tabsContainer" class="tabs" style="display:none;">
+    <button class="tab-btn active" onclick="filterRequests('all')">
+      <i class="fas fa-layer-group"></i> All Requests
+    </button>
+    <button class="tab-btn" onclick="filterRequests('pending')">
+      <i class="fas fa-clock"></i> Pending
+    </button>
+    <button class="tab-btn" onclick="filterRequests('approved')">
+      <i class="fas fa-check-circle"></i> Approved
+    </button>
+    <button class="tab-btn" onclick="filterRequests('rejected')">
+      <i class="fas fa-times-circle"></i> Rejected
+    </button>
+  </div>
+
+  <!-- Requests List -->
+  <div class="requests-list" id="requestsList">
+    <!-- Requests will be loaded here dynamically -->
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" id="emptyState" style="display: none;">
+    <i class="fas fa-inbox"></i>
+    <h3>No Requests Yet</h3>
+    <p>When renters send booking requests for your posts, they will appear here.</p>
+    <a href="post.html" class="action-btn view-btn">
+      <i class="fas fa-plus"></i>
+      <span>Create New Post</span>
+    </a>
+  </div>
+</div>
+
+
+
+<script>
+let allRequests = [];
+let currentFilter = 'all';
+
+// ========== FIXED: Fetch requests from server ==========
+async function fetchRequests() {
+  try {
+    console.log("Fetching requests...");
+    
+    // Show loading state
+    document.getElementById('loadingState').style.display = 'block';
+    document.getElementById('statsContainer').style.display = 'none';
+    document.getElementById('tabsContainer').style.display = 'none';
+    
+    // FIX: Use correct URL path - removed /RentalApp
+    const response = await fetch('requests');
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log("Requests received:", data);
+    
+    // Hide loading state
+    document.getElementById('loadingState').style.display = 'none';
+    
+    if (Array.isArray(data)) {
+      allRequests = data;
+      updateUI();
+    } else if (data && data.error) {
+      throw new Error(data.error);
+    } else {
+      throw new Error('Invalid response format');
+    }
+    
+  } catch (error) {
+    console.error('Error fetching requests:', error);
+    
+    // Hide loading state
+    document.getElementById('loadingState').style.display = 'none';
+    
+    // Show error in the UI
+    showErrorInUI(`Failed to load requests. ${error.message}`);
+    
+    // Try to get counts separately as fallback
+    fetchRequestCounts();
+  }
+}
+
+// ========== NEW: Fetch counts separately ==========
+async function fetchRequestCounts() {
+  try {
+    const response = await fetch('requests?action=count');
+    if (response.ok) {
+      const counts = await response.json();
+      updateStatsWithCounts(counts);
+      // Show stats even if main request failed
+      document.getElementById('statsContainer').style.display = 'grid';
+      document.getElementById('tabsContainer').style.display = 'flex';
+    }
+  } catch (error) {
+    console.error('Error fetching counts:', error);
+  }
+}
+
+// ========== NEW: Show error in UI ==========
+function showErrorInUI(message) {
+  const container = document.getElementById('requestsList');
+  container.innerHTML = `
+    <div class="empty-state" style="display: block;">
+      <i class="fas fa-exclamation-triangle" style="color: #ff6b6b;"></i>
+      <h3>Error Loading Requests</h3>
+      <p>${message}</p>
+      <button onclick="fetchRequests()" class="action-btn view-btn">
+        <i class="fas fa-redo"></i>
+        <span>Retry</span>
+      </button>
+      <button onclick="fetchRequestCounts()" class="action-btn" style="margin-top: 10px; background: #f39c12;">
+        <i class="fas fa-chart-bar"></i>
+        <span>Load Statistics Only</span>
+      </button>
+    </div>
+  `;
+}
+
+// ========== Update the UI with requests ==========
+function updateUI() {
+  updateNotificationBadge();
+  updateStats();
+  
+  // Show stats and tabs
+  document.getElementById('statsContainer').style.display = 'grid';
+  document.getElementById('tabsContainer').style.display = 'flex';
+  
+  filterRequests(currentFilter);
+}
+
+// ========== Update notification badge ==========
+function updateNotificationBadge() {
+  const pendingCount = allRequests.filter(req => req.status === 'pending').length;
+  const badge = document.getElementById('notificationCount');
+  
+  if (pendingCount > 0) {
+    badge.textContent = pendingCount > 99 ? '99+' : pendingCount;
+    badge.style.display = 'flex';
+    
+    // Update browser tab title with notification
+    document.title = `(${pendingCount}) Requests - Bhadasewa`;
+  } else {
+    badge.style.display = 'none';
+    document.title = 'Requests - Bhadasewa';
+  }
+}
+
+// ========== Update stats ==========
+function updateStats() {
+  const total = allRequests.length;
+  const pending = allRequests.filter(req => req.status === 'pending').length;
+  const approved = allRequests.filter(req => req.status === 'approved').length;
+  
+  document.getElementById('totalRequests').textContent = total;
+  document.getElementById('pendingRequests').textContent = pending;
+  document.getElementById('approvedRequests').textContent = approved;
+}
+
+// ========== Update stats with counts from separate endpoint ==========
+function updateStatsWithCounts(counts) {
+  if (counts && typeof counts === 'object') {
+    document.getElementById('totalRequests').textContent = counts.total || 0;
+    document.getElementById('pendingRequests').textContent = counts.pending || 0;
+    document.getElementById('approvedRequests').textContent = counts.approved || 0;
+    
+    // Update notification badge from counts
+    const badge = document.getElementById('notificationCount');
+    if (counts.pending > 0) {
+      badge.textContent = counts.pending > 99 ? '99+' : counts.pending;
+      badge.style.display = 'flex';
+      document.title = `(${counts.pending}) Requests - Bhadasewa`;
+    }
+  }
+}
+
+// ========== Filter requests by status ==========
+function filterRequests(status) {
+  currentFilter = status;
+  
+  // Update active tab
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Set active based on text content
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    if (btn.textContent.toLowerCase().includes(status)) {
+      btn.classList.add('active');
+    }
+  });
+  
+  // Filter requests
+  let filteredRequests = allRequests;
+  if (status !== 'all') {
+    filteredRequests = allRequests.filter(req => req.status === status);
+  }
+  
+  // Render filtered requests
+  renderRequests(filteredRequests);
+}
+
+// ========== Render requests to the page ==========
+function renderRequests(requests) {
+  const container = document.getElementById('requestsList');
+  const emptyState = document.getElementById('emptyState');
+  
+  if (requests.length === 0) {
+    container.innerHTML = '';
+    emptyState.style.display = 'block';
+    
+    // Update empty state message based on filter
+    if (currentFilter === 'all') {
+      emptyState.querySelector('p').textContent = 'When renters send booking requests for your posts, they will appear here.';
+    } else {
+      emptyState.querySelector('p').textContent = `No ${currentFilter} requests found.`;
+    }
+    
+    return;
+  }
+  
+  emptyState.style.display = 'none';
+  container.innerHTML = '';
+  
+  requests.forEach(request => {
+    const requestCard = document.createElement('div');
+    requestCard.className = `request-card ${request.status}`;
+    
+    // Format date
+    const requestDate = new Date(request.created_at);
+    const formattedDate = requestDate.toLocaleDateString('en-US', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+    const formattedTime = requestDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    
+    // Get user info based on role (owner sees renter info, renter sees owner info)
+    const userName = request.renter_name || request.owner_name || 'User';
+    const userEmail = request.renter_email || request.owner_email || 'No email provided';
+    const userPhone = request.renter_phone || request.owner_phone || 'No phone provided';
+    const userLabel = request.renter_name ? 'Renter' : 'Owner';
+    
+    requestCard.innerHTML = `
+      <div class="request-header">
+        <div class="request-info">
+          <h3>${request.post_title || 'Rental Property'}</h3>
+          <div class="request-meta">
+            <div class="meta-item">
+              <i class="fas fa-user"></i>
+              <span>${userName}</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-calendar-alt"></i>
+              <span>${formattedDate}</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-clock"></i>
+              <span>${formattedTime}</span>
+            </div>
+          </div>
+        </div>
+        <div class="status-badge status-${request.status}">
+          <i class="fas fa-${getStatusIcon(request.status)}"></i>
+          ${request.status.toUpperCase()}
+        </div>
+      </div>
+      
+      <div class="request-body">
+        <div class="post-details">
+          <h4><i class="fas fa-info-circle"></i> Property Details</h4>
+          <p><i class="fas fa-tag"></i> <strong>Category:</strong> ${request.category || 'Not specified'}</p>
+          <p><i class="fas fa-money-bill-wave"></i> <strong>Price:</strong> Rs. ${request.price || '0'} / month</p>
+          <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> ${request.location || 'Location not specified'}</p>
+        </div>
+        
+        <div class="requester-info">
+          <div class="requester-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="requester-details">
+            <h5><i class="fas fa-user-tag"></i> ${userName} (${userLabel})</h5>
+            <p><i class="fas fa-envelope"></i> ${userEmail}</p>
+            <p><i class="fas fa-phone"></i> ${userPhone}</p>
+          </div>
+        </div>
+        
+        <div class="message-box">
+          <p><strong><i class="fas fa-comment"></i> Message:</strong> ${request.message || 'Request to book your rental.'}</p>
+        </div>
+      </div>
+      
+      <div class="request-actions">
+        ${request.status === 'pending' ? `
+          <button class="action-btn accept-btn" onclick="updateRequest(${request.id}, 'approved')">
+            <i class="fas fa-check"></i>
+            <span>Accept Request</span>
+          </button>
+          <button class="action-btn decline-btn" onclick="updateRequest(${request.id}, 'rejected')">
+            <i class="fas fa-times"></i>
+            <span>Decline Request</span>
+          </button>
+        ` : ''}
+        
+        <a href="postDetails.html?id=${request.post_id}" class="action-btn view-btn">
+          <i class="fas fa-eye"></i>
+          <span>View Property</span>
+        </a>
+        
+        <button class="action-btn message-btn" onclick="sendMessage('${userName}', '${userEmail}')">
+          <i class="fas fa-comment-alt"></i>
+          <span>Contact ${userLabel}</span>
+        </button>
+      </div>
+    `;
+    
+    container.appendChild(requestCard);
+  });
+}
+
+// ========== Get icon for status ==========
+function getStatusIcon(status) {
+  switch(status) {
+    case 'pending': return 'clock';
+    case 'approved': return 'check-circle';
+    case 'rejected': return 'times-circle';
+    default: return 'circle';
+  }
+}
+
+// ========== Update request status ==========
+async function updateRequest(requestId, status) {
+  const action = status === 'approved' ? 'accept' : 'decline';
+  if (!confirm(`Are you sure you want to ${action} this request?`)) {
+    return;
+  }
+  
+  try {
+    // FIX: Use correct URL path
+    const response = await fetch('requests', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `action=update&requestId=${requestId}&status=${status}`
+    });
+    
+    if (!response.ok) throw new Error('Failed to update request');
+    
+    const result = await response.text();
+    showNotification(result, 'success');
+    
+    // Refresh the requests
+    await fetchRequests();
+  } catch (error) {
+    console.error('Error updating request:', error);
+    showNotification('Failed to update request. Please try again.', 'error');
+  }
+}
+
+// ========== Send message ==========
+function sendMessage(userName, userEmail) {
+  const subject = encodeURIComponent(`Regarding Your Rental Request - Bhadasewa`);
+  const body = encodeURIComponent(`Hello ${userName},\n\nThank you for your interest in my property. `);
+  window.location.href = `mailto:${userEmail}?subject=${subject}&body=${body}`;
+}
+
+// ========== Show notification ==========
+function showNotification(message, type = 'info') {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.innerHTML = `
+    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+    <span>${message}</span>
+    <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+  `;
+  
+  // Add styles for notification
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: ${type === 'success' ? '#27ae60' : '#ff6b6b'};
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10000;
+    animation: slideIn 0.3s ease-out;
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    if (notification.parentElement) {
+      notification.remove();
+    }
+  }, 5000);
+}
+
+// ========== Test connection ==========
+async function testConnection() {
+  console.log("Testing connection to servlet...");
+  
+  try {
+    const response = await fetch('requests');
+    console.log("Response status:", response.status);
+    console.log("Response OK:", response.ok);
+    
+    const data = await response.text();
+    console.log("Response preview:", data.substring(0, 200));
+    
+    return true;
+  } catch (error) {
+    console.error("Connection test failed:", error);
+    return false;
+  }
+}
+
+// ========== Initialize on page load ==========
+document.addEventListener('DOMContentLoaded', async () => {
+  console.log("Page loaded, testing connection...");
+  
+  // Test connection first
+  const connected = await testConnection();
+  
+  if (connected) {
+    // Fetch both requests and counts
+    fetchRequests();
+    fetchRequestCounts();
+  } else {
+    showErrorInUI("Cannot connect to server. Please check if the server is running.");
+  }
+  
+  // Auto-refresh every 30 seconds
+  setInterval(() => {
+    fetchRequests();
+    fetchRequestCounts();
+  }, 30000);
+});
+</script>
+
+</body>
+</html>

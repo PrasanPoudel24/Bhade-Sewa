@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Requests - Bhadasewa</title>
+<style>
+  * { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  body { 
+    background: linear-gradient(135deg, #f5f7ff 0%, #eef2ff 100%);
+    color: #333;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Subtle background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(100, 116, 255, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 85% 30%, rgba(100, 116, 255, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 50% 80%, rgba(100, 116, 255, 0.05) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Floating elements decoration */
+  .floating-element {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .element-1 {
+    width: 180px;
+    height: 180px;
+    top: 10%;
+    right: 5%;
+    background: radial-gradient(circle, rgba(100, 116, 255, 0.08), transparent 70%);
+    border-radius: 50%;
+    animation: float 20s infinite ease-in-out;
+  }
+
+  .element-2 {
+    width: 150px;
+    height: 150px;
+    bottom: 15%;
+    left: 8%;
+    background: radial-gradient(circle, rgba(100, 116, 255, 0.06), transparent 70%);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation: float 25s infinite ease-in-out reverse;
+  }
+
+  .element-3 {
+    width: 120px;
+    height: 120px;
+    top: 60%;
+    right: 15%;
+    background: radial-gradient(circle, rgba(100, 116, 255, 0.07), transparent 70%);
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    animation: float 18s infinite ease-in-out;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+    }
+    33% {
+      transform: translateY(-15px) translateX(10px) rotate(5deg);
+    }
+    66% {
+      transform: translateY(10px) translateX(-10px) rotate(-5deg);
+    }
+  }
+
+  /* ---------------- NAVBAR ---------------- */
+  .navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(100, 116, 255, 0.1);
+  }
+
+  .logo {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #6474ff 0%, #8a6cff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.5px;
+  }
+
+  .logo::before {
+    content: '🏠';
+    font-size: 28px;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .nav-buttons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .nav-btn {
+    padding: 10px 22px;
+    background: #f0f4ff;
+    color: #6474ff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(100, 116, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #6474ff 0%, #8a6cff 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .nav-btn:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(100, 116, 255, 0.3);
+  }
+
+  .nav-btn:hover::after {
+    opacity: 1;
+  }
+
+  .nav-btn span {
+    position: relative;
+    z-index: 2;
+  }
+
+  .nav-btn.active {
+    background: linear-gradient(90deg, #6474ff 0%, #8a6cff 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(100, 116, 255, 0.3);
+  }
+
+  /* Main Container */
+  .container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Page Header */
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeInDown 0.6s ease-out;
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .page-header h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #1a1a2e 0%, #6474ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .page-header p {
+    color: #666;
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Stats Cards */
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .stat-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+
+  .stat-card.total::before {
+    background: linear-gradient(90deg, #6474ff 0%, #8a6cff 100%);
+  }
+
+  .stat-card.pending::before {
+    background: linear-gradient(90deg, #ffa726 0%, #ff9800 100%);
+  }
+
+  .stat-card.approved::before {
+    background: linear-gradient(90deg, #66bb6a 0%, #4caf50 100%);
+  }
+
+  .stat-card.cancelled::before {
+    background: linear-gradient(90deg, #ff6b6b 0%, #f44336 100%);
+  }
+
+  .stat-card.rejected::before {
+    background: linear-gradient(90deg, #9e9e9e 0%, #757575 100%);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-number {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .stat-card.total .stat-number {
+    color: #6474ff;
+  }
+
+  .stat-card.pending .stat-number {
+    color: #ffa726;
+  }
+
+  .stat-card.approved .stat-number {
+    color: #66bb6a;
+  }
+
+  .stat-card.cancelled .stat-number {
+    color: #ff6b6b;
+  }
+
+  .stat-card.rejected .stat-number {
+    color: #9e9e9e;
+  }
+
+  .stat-label {
+    color: #666;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    padding: 12px 28px;
+    background: #f0f4ff;
+    color: #6474ff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border: 1.5px solid #e1e7ff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tab-btn:hover {
+    background: #6474ff;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(100, 116, 255, 0.2);
+  }
+
+  .tab-btn.active {
+    background: #6474ff;
+    color: white;
+    box-shadow: 0 4px 12px rgba(100, 116, 255, 0.3);
+  }
+
+  /* Requests List */
+  .requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    animation: fadeInUp 0.6s ease-out 0.6s both;
+  }
+
+  .request-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .request-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+
+  .request-card.pending::before {
+    background: linear-gradient(90deg, #ffa726 0%, #ff9800 100%);
+  }
+
+  .request-card.approved::before {
+    background: linear-gradient(90deg, #66bb6a 0%, #4caf50 100%);
+  }
+
+  .request-card.rejected::before {
+    background: linear-gradient(90deg, #ff6b6b 0%, #f44336 100%);
+  }
+
+  .request-card.cancelled::before {
+    background: linear-gradient(90deg, #9e9e9e 0%, #757575 100%);
+  }
+
+  .request-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .request-info h3 {
+    font-size: 24px;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .request-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .meta-item i {
+    color: #6474ff;
+    width: 16px;
+  }
+
+  .status-badge {
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-pending {
+    background: rgba(255, 167, 38, 0.1);
+    color: #ff9800;
+    border: 1px solid rgba(255, 167, 38, 0.3);
+  }
+
+  .status-approved {
+    background: rgba(102, 187, 106, 0.1);
+    color: #4caf50;
+    border: 1px solid rgba(102, 187, 106, 0.3);
+  }
+
+  .status-rejected {
+    background: rgba(255, 107, 107, 0.1);
+    color: #f44336;
+    border: 1px solid rgba(255, 107, 107, 0.3);
+  }
+
+  .status-cancelled {
+    background: rgba(158, 158, 158, 0.1);
+    color: #757575;
+    border: 1px solid rgba(158, 158, 158, 0.3);
+  }
+
+  .request-body {
+    margin: 25px 0;
+    padding: 25px;
+    background: #f8faff;
+    border-radius: 15px;
+    border: 1px solid #e1e7ff;
+  }
+
+  .owner-details {
+    margin-bottom: 20px;
+  }
+
+  .owner-details h4 {
+    font-size: 18px;
+    color: #1a1a2e;
+    margin-bottom: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .owner-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e1e7ff;
+  }
+
+  .owner-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6474ff 0%, #8a6cff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+  }
+
+  .owner-contact h5 {
+    font-size: 18px;
+    color: #1a1a2e;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+
+  .owner-contact p {
+    color: #666;
+    font-size: 14px;
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .owner-contact p i {
+    color: #6474ff;
+    width: 16px;
+  }
+
+  .property-details h4 {
+    font-size: 18px;
+    color: #1a1a2e;
+    margin-bottom: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .property-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+  }
+
+  .property-info p {
+    color: #666;
+    font-size: 15px;
+    padding: 12px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #e1e7ff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .property-info p i {
+    color: #6474ff;
+    width: 18px;
+    text-align: center;
+  }
+
+  .message-box {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e1e7ff;
+  }
+
+  .message-box p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .request-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.3px;
+    text-decoration: none;
+  }
+
+  .action-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .action-btn:hover::after {
+    opacity: 1;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-3px);
+  }
+
+  .action-btn span {
+    position: relative;
+    z-index: 2;
+  }
+
+  .view-btn { 
+    background: linear-gradient(90deg, #6474ff 0%, #8a6cff 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(100, 116, 255, 0.3);
+  }
+
+  .view-btn::after {
+    background: linear-gradient(90deg, #5464e5 0%, #7a5ce5 100%);
+  }
+
+  .view-btn:hover {
+    box-shadow: 0 8px 20px rgba(100, 116, 255, 0.4);
+  }
+
+  .message-btn { 
+    background: linear-gradient(90deg, #8e44ad 0%, #9b59b6 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+  }
+
+  .message-btn::after {
+    background: linear-gradient(90deg, #7d3c98 0%, #884ea0 100%);
+  }
+
+  .message-btn:hover {
+    box-shadow: 0 8px 20px rgba(142, 68, 173, 0.4);
+  }
+
+  .cancel-btn { 
+    background: linear-gradient(90deg, #ffa726 0%, #ff9800 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 167, 38, 0.3);
+  }
+
+  .cancel-btn::after {
+    background: linear-gradient(90deg, #e6961e 0%, #e68a00 100%);
+  }
+
+  .cancel-btn:hover {
+    box-shadow: 0 8px 20px rgba(255, 167, 38, 0.4);
+  }
+
+  /* Loading State */
+  .loading {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #f0f4ff;
+    border-top: 5px solid #6474ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 25px;
+  }
+
+  .loading p {
+    color: #6474ff;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    margin-top: 30px;
+  }
+
+  .empty-state i {
+    font-size: 72px;
+    color: #6474ff;
+    margin-bottom: 25px;
+    opacity: 0.7;
+  }
+
+  .empty-state h3 {
+    font-size: 28px;
+    color: #1a1a2e;
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+
+  .empty-state p {
+    color: #666;
+    font-size: 18px;
+    max-width: 500px;
+    margin: 0 auto 30px;
+    line-height: 1.6;
+  }
+
+  .empty-state .action-btn {
+    margin: 0 auto;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 25px;
+    color: #777;
+    font-size: 14px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.9);
+    margin-top: 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Notification Styles */
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10000;
+    animation: slideIn 0.3s ease-out;
+    color: white;
+  }
+
+  .notification.success {
+    background: #66bb6a;
+  }
+
+  .notification.error {
+    background: #ff6b6b;
+  }
+
+  .notification.info {
+    background: #6474ff;
+  }
+
+  .notification button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+    font-size: 16px;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .container {
+      max-width: 95%;
+    }
+    
+    .stats-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 16px 25px;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .nav-buttons {
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 20px;
+    }
+
+    .page-header h1 {
+      font-size: 32px;
+    }
+
+    .stats-container {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .request-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .request-actions {
+      flex-direction: column;
+    }
+
+    .action-btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .tabs {
+      justify-content: center;
+    }
+
+    .property-info {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .navbar {
+      padding: 12px 15px;
+    }
+
+    .logo {
+      font-size: 18px;
+    }
+
+    .nav-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+    }
+
+    .page-header p {
+      font-size: 16px;
+    }
+
+    .request-card {
+      padding: 20px 15px;
+    }
+
+    .request-info h3 {
+      font-size: 20px;
+    }
+
+    .owner-info {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Floating elements -->
+<div class="floating-element element-1"></div>
+<div class="floating-element element-2"></div>
+<div class="floating-element element-3"></div>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="logo">Bhada Sewa</div>
+  <div class="nav-buttons">
+    <a href="index.html" class="nav-btn"><i class="fas fa-home"></i> Home</a>
+    <a href="post.html" class="nav-btn"><i class="fas fa-plus-circle"></i> Create Post</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i> Profile</a>
+    <a href="request1.html" class="nav-btn active"><i class="fas fa-inbox"></i> My Requests</a>
+    <a href="login.html" class="nav-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</div>
+
+<!-- Main Container -->
+<div class="container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1><i class="fas fa-paper-plane"></i> My Rental Requests</h1>
+    <p>Track all your sent requests and their current status</p>
+  </div>
+
+  <!-- Loading State -->
+  <div id="loadingState" class="loading">
+    <div class="loading-spinner"></div>
+    <p>Loading your requests...</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div id="statsContainer" class="stats-container" style="display:none;">
+    <div class="stat-card total">
+      <div class="stat-number" id="totalRequests">0</div>
+      <div class="stat-label">Total Sent</div>
+    </div>
+    <div class="stat-card pending">
+      <div class="stat-number" id="pendingRequests">0</div>
+      <div class="stat-label">Awaiting Response</div>
+    </div>
+    <div class="stat-card approved">
+      <div class="stat-number" id="approvedRequests">0</div>
+      <div class="stat-label">Approved</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div id="tabsContainer" class="tabs" style="display:none;">
+    <button class="tab-btn active" onclick="filterRequests('all')">
+      <i class="fas fa-layer-group"></i> All Requests
+    </button>
+    <button class="tab-btn" onclick="filterRequests('pending')">
+      <i class="fas fa-clock"></i> Pending
+    </button>
+    <button class="tab-btn" onclick="filterRequests('approved')">
+      <i class="fas fa-check-circle"></i> Approved
+    </button>
+    <button class="tab-btn" onclick="filterRequests('rejected')">
+      <i class="fas fa-times-circle"></i> Rejected
+    </button>
+    <button class="tab-btn" onclick="filterRequests('cancelled')">
+      <i class="fas fa-ban"></i> Cancelled
+    </button>
+  </div>
+
+  <!-- Requests List -->
+  <div class="requests-list" id="requestsList">
+    <!-- Requests will be loaded here dynamically -->
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" id="emptyState" style="display: none;">
+    <i class="fas fa-paper-plane"></i>
+    <h3>No Requests Sent Yet</h3>
+    <p>You haven't sent any rental requests yet. Browse properties and send your first request!</p>
+    <a href="index.html" class="action-btn view-btn">
+      <i class="fas fa-search"></i>
+      <span>Browse Properties</span>
+    </a>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>© 2023 Bhada Sewa - Rental Platform. All rights reserved.</p>
+</div>
+
+<script>
+let allRequests = [];
+let currentFilter = 'all';
+
+// ========== Fetch requests from server ==========
+async function fetchRequests() {
+  try {
+    console.log("Fetching my requests...");
+    
+    // Show loading state
+    document.getElementById('loadingState').style.display = 'block';
+    document.getElementById('statsContainer').style.display = 'none';
+    document.getElementById('tabsContainer').style.display = 'none';
+    
+    // Fetch requests - Using the main RequestsServlet
+    const response = await fetch('requests');
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log("My requests received:", data);
+    
+    // Hide loading state
+    document.getElementById('loadingState').style.display = 'none';
+    
+    if (Array.isArray(data)) {
+      // Filter for renter requests only (requests where user_type is 'renter' or we are the renter)
+      allRequests = data.filter(req => req.user_type === 'renter' || req.renter_id);
+      updateUI();
+    } else if (data && data.error) {
+      throw new Error(data.error);
+    } else {
+      throw new Error('Invalid response format');
+    }
+    
+  } catch (error) {
+    console.error('Error fetching requests:', error);
+    
+    // Hide loading state
+    document.getElementById('loadingState').style.display = 'none';
+    
+    // Show error in the UI
+    showErrorInUI(`Failed to load your requests. ${error.message}`);
+    
+    // Try to get counts separately as fallback
+    fetchRequestCounts();
+  }
+}
+
+// ========== Fetch counts separately ==========
+async function fetchRequestCounts() {
+  try {
+    const response = await fetch('requests?action=count');
+    if (response.ok) {
+      const counts = await response.json();
+      updateStatsWithCounts(counts);
+      // Show stats even if main request failed
+      document.getElementById('statsContainer').style.display = 'grid';
+      document.getElementById('tabsContainer').style.display = 'flex';
+    }
+  } catch (error) {
+    console.error('Error fetching counts:', error);
+  }
+}
+
+// ========== Show error in UI ==========
+function showErrorInUI(message) {
+  const container = document.getElementById('requestsList');
+  container.innerHTML = `
+    <div class="empty-state" style="display: block;">
+      <i class="fas fa-exclamation-triangle" style="color: #ff6b6b;"></i>
+      <h3>Error Loading Requests</h3>
+      <p>${message}</p>
+      <button onclick="fetchRequests()" class="action-btn view-btn">
+        <i class="fas fa-redo"></i>
+        <span>Retry</span>
+      </button>
+    </div>
+  `;
+}
+
+// ========== Update the UI with requests ==========
+function updateUI() {
+  updateStats();
+  
+  // Show stats and tabs
+  document.getElementById('statsContainer').style.display = 'grid';
+  document.getElementById('tabsContainer').style.display = 'flex';
+  
+  filterRequests(currentFilter);
+}
+
+// ========== Update stats ==========
+function updateStats() {
+  const total = allRequests.length;
+  const pending = allRequests.filter(req => req.status === 'pending').length;
+  const approved = allRequests.filter(req => req.status === 'approved').length;
+  const rejected = allRequests.filter(req => req.status === 'rejected').length;
+  const cancelled = allRequests.filter(req => req.status === 'cancelled').length;
+  
+  document.getElementById('totalRequests').textContent = total;
+  document.getElementById('pendingRequests').textContent = pending;
+  document.getElementById('approvedRequests').textContent = approved;
+  
+  // Update or create stats cards dynamically
+  const statsContainer = document.getElementById('statsContainer');
+  
+  // Remove existing rejected/cancelled cards if they exist
+  const existingRejected = document.getElementById('rejectedStatCard');
+  const existingCancelled = document.getElementById('cancelledStatCard');
+  if (existingRejected) existingRejected.remove();
+  if (existingCancelled) existingCancelled.remove();
+  
+  // Add rejected card if there are rejected requests
+  if (rejected > 0) {
+    const rejectedCard = document.createElement('div');
+    rejectedCard.className = 'stat-card rejected';
+    rejectedCard.id = 'rejectedStatCard';
+    rejectedCard.innerHTML = `
+      <div class="stat-number">${rejected}</div>
+      <div class="stat-label">Rejected</div>
+    `;
+    statsContainer.appendChild(rejectedCard);
+  }
+  
+  // Add cancelled card if there are cancelled requests
+  if (cancelled > 0) {
+    const cancelledCard = document.createElement('div');
+    cancelledCard.className = 'stat-card cancelled';
+    cancelledCard.id = 'cancelledStatCard';
+    cancelledCard.innerHTML = `
+      <div class="stat-number">${cancelled}</div>
+      <div class="stat-label">Cancelled</div>
+    `;
+    statsContainer.appendChild(cancelledCard);
+  }
+}
+
+// ========== Update stats with counts from separate endpoint ==========
+function updateStatsWithCounts(counts) {
+  if (counts && typeof counts === 'object') {
+    document.getElementById('totalRequests').textContent = counts.total || 0;
+    document.getElementById('pendingRequests').textContent = counts.pending || 0;
+    document.getElementById('approvedRequests').textContent = counts.approved || 0;
+    
+    const statsContainer = document.getElementById('statsContainer');
+    
+    // Add rejected stat if exists
+    if (counts.rejected > 0 && !document.getElementById('rejectedStatCard')) {
+      const rejectedCard = document.createElement('div');
+      rejectedCard.className = 'stat-card rejected';
+      rejectedCard.id = 'rejectedStatCard';
+      rejectedCard.innerHTML = `
+        <div class="stat-number">${counts.rejected}</div>
+        <div class="stat-label">Rejected</div>
+      `;
+      statsContainer.appendChild(rejectedCard);
+    }
+    
+    // Add cancelled stat if exists
+    if (counts.cancelled > 0 && !document.getElementById('cancelledStatCard')) {
+      const cancelledCard = document.createElement('div');
+      cancelledCard.className = 'stat-card cancelled';
+      cancelledCard.id = 'cancelledStatCard';
+      cancelledCard.innerHTML = `
+        <div class="stat-number">${counts.cancelled}</div>
+        <div class="stat-label">Cancelled</div>
+      `;
+      statsContainer.appendChild(cancelledCard);
+    }
+  }
+}
+
+// ========== Filter requests by status ==========
+function filterRequests(status) {
+  currentFilter = status;
+  
+  // Update active tab
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Set active based on status
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    if (btn.textContent.toLowerCase().includes(status)) {
+      btn.classList.add('active');
+    }
+  });
+  
+  // Filter requests
+  let filteredRequests = allRequests;
+  if (status !== 'all') {
+    filteredRequests = allRequests.filter(req => req.status === status);
+  }
+  
+  // Render filtered requests
+  renderRequests(filteredRequests);
+}
+
+// ========== Render requests to the page ==========
+function renderRequests(requests) {
+  const container = document.getElementById('requestsList');
+  const emptyState = document.getElementById('emptyState');
+  
+  if (requests.length === 0) {
+    container.innerHTML = '';
+    emptyState.style.display = 'block';
+    
+    // Update empty state message based on filter
+    if (currentFilter === 'all') {
+      emptyState.querySelector('p').textContent = 'You haven\'t sent any rental requests yet. Browse properties and send your first request!';
+    } else {
+      emptyState.querySelector('p').textContent = `No ${currentFilter} requests found.`;
+    }
+    
+    return;
+  }
+  
+  emptyState.style.display = 'none';
+  container.innerHTML = '';
+  
+  requests.forEach(request => {
+    const requestCard = document.createElement('div');
+    requestCard.className = `request-card ${request.status}`;
+    
+    // Format date
+    const requestDate = new Date(request.created_at);
+    const formattedDate = requestDate.toLocaleDateString('en-US', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+    const formattedTime = requestDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    
+    // Status description
+    let statusDescription = '';
+    let statusIcon = '';
+    switch(request.status) {
+      case 'pending':
+        statusDescription = 'Awaiting owner response';
+        statusIcon = 'clock';
+        break;
+      case 'approved':
+        statusDescription = 'Request accepted by owner';
+        statusIcon = 'check-circle';
+        break;
+      case 'rejected':
+        statusDescription = 'Request declined by owner';
+        statusIcon = 'times-circle';
+        break;
+      case 'cancelled':
+        statusDescription = 'Request cancelled by you';
+        statusIcon = 'ban';
+        break;
+      default:
+        statusDescription = 'Request status unknown';
+        statusIcon = 'question-circle';
+    }
+    
+    // Truncate long descriptions
+    const description = request.description ? 
+      (request.description.length > 150 ? 
+        request.description.substring(0, 150) + '...' : 
+        request.description) : 
+      'No description available';
+    
+    requestCard.innerHTML = `
+      <div class="request-header">
+        <div class="request-info">
+          <h3>${request.post_title || 'Rental Property'}</h3>
+          <div class="request-meta">
+            <div class="meta-item">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Sent: ${formattedDate}</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-clock"></i>
+              <span>${formattedTime}</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-info-circle"></i>
+              <span>${statusDescription}</span>
+            </div>
+          </div>
+        </div>
+        <div class="status-badge status-${request.status}">
+          <i class="fas fa-${statusIcon}"></i>
+          ${request.status.toUpperCase()}
+        </div>
+      </div>
+      
+      <div class="request-body">
+        <div class="owner-details">
+          <h4><i class="fas fa-user-tie"></i> Property Owner</h4>
+          <div class="owner-info">
+            <div class="owner-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="owner-contact">
+              <h5>${request.owner_name || 'Property Owner'}</h5>
+              <p><i class="fas fa-envelope"></i> ${request.owner_email || 'Email not available'}</p>
+              <p><i class="fas fa-phone"></i> ${request.owner_phone || 'Phone not available'}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="property-details">
+          <h4><i class="fas fa-home"></i> Property Details</h4>
+          <div class="property-info">
+            <p><i class="fas fa-tag"></i> <strong>Category:</strong> ${request.category || 'Not specified'}</p>
+            <p><i class="fas fa-money-bill-wave"></i> <strong>Price:</strong> Rs. ${request.price || '0'} / month</p>
+            <p><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> ${request.location || 'Location not specified'}</p>
+            <p><i class="fas fa-align-left"></i> <strong>Description:</strong> ${description}</p>
+          </div>
+        </div>
+        
+        <div class="message-box">
+          <p><strong><i class="fas fa-comment-alt"></i> Your Message to Owner:</strong> ${request.message || 'Request to book this rental.'}</p>
+        </div>
+      </div>
+      
+      <div class="request-actions">
+        <a href="postDetails.html?id=${request.post_id}" class="action-btn view-btn">
+          <i class="fas fa-eye"></i>
+          <span>View Property</span>
+        </a>
+        
+        <button class="action-btn message-btn" onclick="contactOwner('${request.owner_name || 'Owner'}', '${request.owner_email || ''}')">
+          <i class="fas fa-comment-alt"></i>
+          <span>Contact Owner</span>
+        </button>
+        
+        ${request.status === 'pending' ? `
+          <button class="action-btn cancel-btn" onclick="cancelRequest(${request.id})">
+            <i class="fas fa-times"></i>
+            <span>Cancel Request</span>
+          </button>
+        ` : ''}
+      </div>
+    `;
+    
+    container.appendChild(requestCard);
+  });
+}
+
+// ========== Contact owner ==========
+function contactOwner(ownerName, ownerEmail) {
+  if (!ownerEmail || ownerEmail === 'Email not available') {
+    showNotification('Owner email is not available', 'error');
+    return;
+  }
+  
+  const subject = encodeURIComponent(`Regarding My Rental Request - Bhadasewa`);
+  const body = encodeURIComponent(`Hello ${ownerName},\n\nI recently sent a rental request for your property on Bhada Sewa. `);
+  window.location.href = `mailto:${ownerEmail}?subject=${subject}&body=${body}`;
+}
+
+// ========== Cancel request (for pending requests only) ==========
+async function cancelRequest(requestId) {
+  if (!confirm("Are you sure you want to cancel this request? This action cannot be undone.")) {
+    return;
+  }
+  
+  try {
+    // Send cancel request to server
+    const response = await fetch('requests', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `action=cancel&requestId=${requestId}`
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to cancel request');
+    }
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      showNotification('Request cancelled successfully!', 'success');
+      // Refresh the requests
+      await fetchRequests();
+    } else {
+      showNotification(result.message || 'Failed to cancel request', 'error');
+    }
+    
+  } catch (error) {
+    console.error('Error cancelling request:', error);
+    showNotification('Failed to cancel request. Please try again.', 'error');
+  }
+}
+
+// ========== Show notification ==========
+function showNotification(message, type = 'info') {
+  // Remove any existing notifications
+  const existingNotifications = document.querySelectorAll('.notification');
+  existingNotifications.forEach(notification => {
+    if (notification.parentElement) {
+      notification.remove();
+    }
+  });
+  
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.innerHTML = `
+    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+    <span>${message}</span>
+    <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    if (notification.parentElement) {
+      notification.remove();
+    }
+  }, 5000);
+}
+
+// ========== Test connection ==========
+async function testConnection() {
+  console.log("Testing connection to servlet...");
+  
+  try {
+    const response = await fetch('requests');
+    console.log("Response status:", response.status);
+    console.log("Response OK:", response.ok);
+    
+    const data = await response.text();
+    console.log("Response preview:", data.substring(0, 200));
+    
+    return true;
+  } catch (error) {
+    console.error("Connection test failed:", error);
+    return false;
+  }
+}
+
+// ========== Initialize on page load ==========
+document.addEventListener('DOMContentLoaded', async () => {
+  console.log("My Requests page loaded");
+  
+  // Test connection first
+  const connected = await testConnection();
+  
+  if (connected) {
+    // Fetch requests and counts
+    await fetchRequests();
+    await fetchRequestCounts();
+  } else {
+    showErrorInUI("Cannot connect to server. Please check if the server is running.");
+  }
+  
+  // Auto-refresh every 30 seconds
+  setInterval(() => {
+    fetchRequests();
+    fetchRequestCounts();
+  }, 30000);
+});
+
+// ========== Utility function to escape HTML ==========
+function escapeHtml(unsafe) {
+  if (!unsafe) return '';
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+</script>
+
+</body>
+</html>

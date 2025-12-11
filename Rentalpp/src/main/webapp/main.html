@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Rentals - Bhadasewa</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body { 
+      background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+      color: #333;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(74, 108, 247, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 85% 30%, rgba(74, 108, 247, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 50% 80%, rgba(74, 108, 247, 0.05) 0%, transparent 20%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Floating circles decoration */
+    .floating-circle {
+      position: fixed;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(74, 108, 247, 0.08), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .circle-1 {
+      width: 200px;
+      height: 200px;
+      top: 10%;
+      left: 5%;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    .circle-2 {
+      width: 150px;
+      height: 150px;
+      bottom: 15%;
+      right: 8%;
+      animation: float 25s infinite ease-in-out reverse;
+    }
+
+    .circle-3 {
+      width: 100px;
+      height: 100px;
+      top: 60%;
+      left: 15%;
+      animation: float 15s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+      }
+      33% {
+        transform: translateY(-20px) translateX(10px);
+      }
+      66% {
+        transform: translateY(10px) translateX(-10px);
+      }
+    }
+
+    /* ---------------- NAVBAR ---------------- */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 18px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .logo {
+    font-size: 26px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+    .logo::before {
+      content: '🏠';
+      font-size: 32px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-btn {
+      padding: 12px 24px;
+      background: #f0f4ff;
+      color: #4a6cf7;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(74, 108, 247, 0.2);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(74, 108, 247, 0.3);
+    }
+
+    .nav-btn:hover::after {
+      opacity: 1;
+    }
+
+    .nav-btn span {
+      position: relative;
+      z-index: 2;
+    }
+
+    .logout-btn {
+      background: linear-gradient(90deg, #ff6b6b 0%, #ee5a52 100%);
+      color: white;
+      border: none;
+    }
+
+    .logout-btn:hover {
+      box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    /* Notification Badge */
+    .notification-badge {
+      position: relative;
+    }
+
+    .badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: linear-gradient(90deg, #ff6b6b 0%, #ee5a52 100%);
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+      box-shadow: 0 2px 10px rgba(255, 107, 107, 0.4);
+      animation: pulse 1.5s infinite;
+      z-index: 10;
+      border: 2px solid white;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 50px 20px 30px;
+      max-width: 800px;
+      margin: 0 auto;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #1a1a2e 0%, #4a6cf7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      color: #666;
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    /* Layout */
+    .container { 
+      display: flex; 
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 30px;
+      margin: 20px 0 20px 20px;
+      border-radius: 20px;
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        0 1px 0 rgba(255, 255, 255, 0.5) inset;
+      position: sticky;
+      top: 90px;
+      height: fit-content;
+      max-height: calc(100vh - 110px);
+      overflow-y: auto;
+      animation: slideInLeft 0.6s ease-out 0.2s both;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+      border-radius: 20px 20px 0 0;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .sidebar h3 { 
+      margin-bottom: 25px;
+      font-size: 22px;
+      color: #1a1a2e;
+      background: linear-gradient(90deg, #1a1a2e 0%, #4a6cf7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar h3::before {
+      content: '📁';
+      font-size: 20px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 12px 0;
+      padding: 14px 20px;
+      text-decoration: none;
+      color: #555;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      border: 1.5px solid #e1e7ff;
+      background: #f8faff;
+    }
+
+    .sidebar a i {
+      width: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .sidebar a:hover {
+      background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+      color: white;
+      padding-left: 25px;
+      transform: translateX(8px);
+      box-shadow: 0 6px 20px rgba(74, 108, 247, 0.25);
+      border-color: transparent;
+    }
+
+    .sidebar a.active {
+      background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(74, 108, 247, 0.25);
+      border-color: transparent;
+    }
+
+    /* Main content */
+    .main-content { 
+      flex: 1;
+      padding: 20px 30px;
+      animation: fadeIn 0.8s ease-out 0.4s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Search bar */
+    .search-bar { 
+      margin-bottom: 40px;
+      display: flex;
+      gap: 15px;
+      animation: slideDown 0.6s ease-out 0.6s both;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 18px 28px;
+      border: 1.5px solid #e1e7ff;
+      border-radius: 15px;
+      outline: none;
+      font-size: 16px;
+      background: #f8faff;
+      color: #333;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .search-bar input:focus {
+      border-color: #4a6cf7;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(74, 108, 247, 0.15), 0 8px 25px rgba(74, 108, 247, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .search-bar input::placeholder {
+      color: #a0a7c2;
+    }
+
+    .search-bar button {
+      padding: 18px 36px;
+      background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(74, 108, 247, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-bar button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #3a5ce5 0%, #6a54e5 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(74, 108, 247, 0.4);
+    }
+
+    .search-bar button:hover::after {
+      opacity: 1;
+    }
+
+    .search-bar button span {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Results Count */
+    .results-count {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 25px;
+      font-weight: 600;
+      animation: fadeIn 0.6s ease-out 0.8s both;
+    }
+
+    .results-count span {
+      color: #4a6cf7;
+      font-weight: 700;
+    }
+
+    /* Cards Grid */
+    .rental-listings {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 30px;
+      animation: fadeInUp 0.8s ease-out 1s both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .rental-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        0 1px 0 rgba(255, 255, 255, 0.5) inset;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .rental-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+      opacity: 0.9;
+      z-index: 2;
+    }
+
+    .rental-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    .image-container {
+      position: relative;
+      overflow: hidden;
+      height: 220px;
+    }
+
+    .rental-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .rental-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .category-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      color: #4a6cf7;
+      padding: 6px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      z-index: 3;
+    }
+
+    .info {
+      padding: 25px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .rental-card h4 {
+      margin-bottom: 15px;
+      color: #1a1a2e;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .rental-card p {
+      margin: 10px 0;
+      color: #666;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .rental-card p i {
+      color: #4a6cf7;
+      width: 18px;
+      font-size: 16px;
+    }
+
+    .price-tag {
+      display: inline-block;
+      background: linear-gradient(90deg, rgba(74, 108, 247, 0.1) 0%, rgba(123, 100, 255, 0.1) 100%);
+      color: #4a6cf7;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    /* Buttons */
+    .rental-card button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+      box-shadow: 0 6px 20px rgba(243, 156, 18, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .rental-card button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #e67e22 0%, #d35400 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .rental-card button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(243, 156, 18, 0.4);
+    }
+
+    .rental-card button:hover::after {
+      opacity: 1;
+    }
+
+    .rental-card button span {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        0 1px 0 rgba(255, 255, 255, 0.5) inset;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      margin-top: 30px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .empty-state i {
+      font-size: 72px;
+      color: #4a6cf7;
+      margin-bottom: 25px;
+      opacity: 0.7;
+    }
+
+    .empty-state h3 {
+      font-size: 28px;
+      color: #1a1a2e;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    .empty-state p {
+      color: #666;
+      font-size: 18px;
+      max-width: 500px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+
+    /* Brand mention */
+    .brand-mention {
+      font-size: 14px;
+      color: #4a6cf7;
+      margin-top: 40px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .brand-mention i {
+      font-size: 16px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+      font-size: 14px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.9);
+      margin-top: 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Custom scrollbar */
+    .sidebar::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+      border-radius: 10px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(90deg, #7b64ff 0%, #4a6cf7 100%);
+    }
+
+    /* Responsive design */
+    @media (max-width: 1200px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        margin: 20px 0;
+        position: static;
+        max-height: none;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .rental-listings {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 16px 25px;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .nav-buttons {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .logo {
+        font-size: 24px;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .search-bar {
+        flex-direction: column;
+      }
+
+      .search-bar button {
+        width: 100%;
+      }
+
+      .rental-listings {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+
+      .sidebar h3 {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar {
+        padding: 12px 15px;
+      }
+
+      .logo {
+        font-size: 20px;
+      }
+
+      .nav-btn {
+        padding: 10px 18px;
+        font-size: 14px;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .rental-card h4 {
+        font-size: 20px;
+      }
+
+      .search-bar input,
+      .search-bar button {
+        padding: 16px 20px;
+        font-size: 15px;
+      }
+      
+      .sidebar {
+        padding: 20px;
+      }
+    }
+    
+    /* Toast notification */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.4s ease-out, slideOut 0.4s ease-in 2.6s;
+  opacity: 0;
+}
+
+.toast.success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.toast.show {
+  opacity: 1;
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
+  </style>
+</head>
+<body>
+
+  <!-- Floating circles -->
+  <div class="floating-circle circle-1"></div>
+  <div class="floating-circle circle-2"></div>
+  <div class="floating-circle circle-3"></div>
+
+  <!-- ---------------- NAVBAR ---------------- -->
+  <div class="navbar">
+    <div class="logo">Bhada Sewa</div>
+    <div class="nav-buttons">
+      <a href="savepost.html" class="nav-btn"><i class="fas fa-star"></i> Saved Posts</a>
+      <a href="notification.html" class="nav-btn notification-badge">
+      <a href="request1.html" class="nav-btn"><i class="fas fa-user"></i> Request</a>
+      <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i> Profile</a>
+      <a href="login.html" class="nav-btn logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h1>Find Your Perfect Rental</h1>
+    <p>Discover amazing houses, rooms, flats, and vehicles available for rent in your area.</p>
+  </div>
+
+  <!-- Layout -->
+  <div class="container">
+    <div class="sidebar">
+      <h3><i class="fas fa-filter"></i> Categories</h3>
+      <a onclick="filterCategory('all')" class="active"><i class="fas fa-layer-group"></i> All Properties</a>
+      <a onclick="filterCategory('house')"><i class="fas fa-home"></i> House</a>
+      <a onclick="filterCategory('room')"><i class="fas fa-door-closed"></i> Room</a>
+      <a onclick="filterCategory('flat')"><i class="fas fa-building"></i> Flat</a>
+      <a onclick="filterCategory('vehicle')"><i class="fas fa-car"></i> Vehicle</a>
+    </div>
+
+    <div class="main-content">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search by location, keyword, or price...">
+        <button onclick="searchPosts()"><i class="fas fa-search"></i> Search Rentals</button>
+      </div>
+
+      <div class="results-count" id="resultsCount">Showing <span id="resultsNumber">0</span> properties</div>
+
+      <div class="rental-listings" id="rental-listings">
+        <!-- Loading State -->
+        <div class="empty-state" id="loadingState">
+          <div class="loading-spinner" style="margin: 0 auto 25px; width: 50px; height: 50px; border: 5px solid #f0f4ff; border-top: 5px solid #4a6cf7; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+          <h3>Loading Properties...</h3>
+          <p>Fetching the best rental options for you</p>
+        </div>
+      </div>
+
+      <!-- Empty State (hidden initially) -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <i class="fas fa-search"></i>
+        <h3>No Properties Found</h3>
+        <p>Try adjusting your search criteria or browse different categories</p>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    let allPosts = [];
+    let currentCategory = 'all';
+    
+    // Fetch posts from server
+    fetch('feed')
+      .then(res => res.json())
+      .then(posts => {
+        allPosts = posts;
+        renderPosts(posts);
+        document.getElementById('loadingState').style.display = 'none';
+        updateNotificationBadge();
+      })
+      .catch(err => {
+        console.error('Error fetching feed:', err);
+        document.getElementById('loadingState').innerHTML = `
+          <i class="fas fa-exclamation-triangle" style="font-size: 72px; color: #ff6b6b; margin-bottom: 25px; opacity: 0.7;"></i>
+          <h3>Failed to Load</h3>
+          <p>Unable to fetch properties. Please try again later.</p>
+        `;
+      });
+
+    function renderPosts(posts) {
+      const container = document.getElementById('rental-listings');
+      const emptyState = document.getElementById('emptyState');
+      
+      if (posts.length === 0) {
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
+        document.getElementById('resultsNumber').textContent = '0';
+        return;
+      }
+      
+      emptyState.style.display = 'none';
+      container.innerHTML = '';
+      
+      posts.forEach(post => {
+        const card = document.createElement('div');
+        card.classList.add('rental-card');
+        card.setAttribute('data-category', post.category);
+        
+        // Get icon for category
+        let categoryIcon = 'fas fa-home';
+        switch(post.category) {
+          case 'room': categoryIcon = 'fas fa-door-closed'; break;
+          case 'flat': categoryIcon = 'fas fa-building'; break;
+          case 'vehicle': categoryIcon = 'fas fa-car'; break;
+        }
+        
+        card.innerHTML = `
+          <div class="image-container">
+            <img src="${post.imageUrl}" alt="${post.title}" class="post-img">
+            <div class="category-badge">
+              <i class="${categoryIcon}"></i> ${post.category.charAt(0).toUpperCase() + post.category.slice(1)}
+            </div>
+          </div>
+          
+          <div class="info">
+            <div>
+              <h4>${post.title}</h4>
+              <p><i class="fas fa-map-marker-alt"></i> ${post.location}</p>
+              <p><i class="fas fa-user"></i> Posted by: ${post.ownerName}</p>
+              <p><i class="far fa-calendar"></i> ${new Date(post.createdAt).toLocaleDateString()}</p>
+              <div class="price-tag">
+                <i class="fas fa-tag"></i> Rs. ${post.price}/month
+              </div>
+            </div>
+            <button onclick="viewDetails(${post.id})">
+              <i class="fas fa-eye"></i>
+              <span>View Details</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      
+      document.getElementById('resultsNumber').textContent = posts.length;
+    }
+
+    function viewDetails(id) {
+      window.location.href = "postDetails.html?id=" + id;
+    }
+
+    function filterCategory(category) {
+      currentCategory = category;
+      
+      // Update active state in sidebar
+      document.querySelectorAll('.sidebar a').forEach(a => {
+        a.classList.remove('active');
+      });
+      document.querySelector(`.sidebar a[onclick="filterCategory('${category}')"]`).classList.add('active');
+      
+      let filteredPosts = allPosts;
+      if (category !== 'all') {
+        filteredPosts = allPosts.filter(post => post.category === category);
+      }
+      
+      // Apply search filter if any
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      if (searchTerm) {
+        filteredPosts = filteredPosts.filter(post => 
+          post.title.toLowerCase().includes(searchTerm) || 
+          post.location.toLowerCase().includes(searchTerm) ||
+          post.description.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      renderPosts(filteredPosts);
+    }
+
+    function searchPosts() {
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      let filteredPosts = allPosts;
+      
+      if (currentCategory !== 'all') {
+        filteredPosts = filteredPosts.filter(post => post.category === currentCategory);
+      }
+      
+      if (term) {
+        filteredPosts = filteredPosts.filter(post => 
+          post.title.toLowerCase().includes(term) || 
+          post.location.toLowerCase().includes(term) ||
+          post.description.toLowerCase().includes(term)
+        );
+      }
+      
+      renderPosts(filteredPosts);
+    }
+    
+    // Update notification badge count
+    async function updateNotificationBadge() {
+      try {
+        const response = await fetch('/RentalApp/notificationCount');
+        if (response.ok) {
+          const data = await response.json();
+          const badge = document.getElementById('notificationCount');
+          
+          if (data.count > 0) {
+            badge.textContent = data.count > 99 ? '99+' : data.count;
+            badge.style.display = 'flex';
+            document.title = `(${data.count}) Bhadasewa - Find Rentals`;
+          } else {
+            document.title = 'Bhadasewa - Find Rentals';
+          }
+        }
+      } catch (error) {
+        console.error('Error updating badge:', error);
+      }
+    }
+    
+    // Add event listener for Enter key in search
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        searchPosts();
+      }
+    });
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      // Auto update badge every 60 seconds
+      setInterval(updateNotificationBadge, 60000);
+    });
+    
+    
+    function showToast(message, type) {
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type} show`;
+      
+      const icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark';
+      toast.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${message}</span>
+      `;
+      
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
+
+    // Check for login success parameter
+    window.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('login') === 'success') {
+        showToast('Login successful! Welcome back.', 'success');
+      }
+    });
+  </script>
+</body>
+</html>

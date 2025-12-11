@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Bhadasewa Rental System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle background pattern */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(74, 108, 247, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 85% 30%, rgba(74, 108, 247, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 50% 80%, rgba(74, 108, 247, 0.05) 0%, transparent 20%);
+      pointer-events: none;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      color: #333;
+      padding: 18px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    }
+    
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .navbar .logo img {
+      height: 45px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+    }
+    
+    .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .navbar .menu {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .navbar .menu a {
+      color: #555;
+      text-decoration: none;
+      padding: 10px 22px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 15px;
+      border: 1px solid transparent;
+    }
+    
+    .navbar .menu a:hover {
+      background: #f0f4ff;
+      color: #4a6cf7;
+      border: 1px solid rgba(74, 108, 247, 0.2);
+    }
+    
+    .navbar .menu a.active {
+      background: #4a6cf7;
+      color: white;
+      box-shadow: 0 4px 12px rgba(74, 108, 247, 0.3);
+    }
+
+    /* Login container */
+    .login-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Floating circles decoration */
+    .floating-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(74, 108, 247, 0.08), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .circle-1 {
+      width: 200px;
+      height: 200px;
+      top: 10%;
+      left: 5%;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    .circle-2 {
+      width: 150px;
+      height: 150px;
+      bottom: 15%;
+      right: 8%;
+      animation: float 25s infinite ease-in-out reverse;
+    }
+
+    .circle-3 {
+      width: 100px;
+      height: 100px;
+      top: 60%;
+      left: 15%;
+      animation: float 15s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+      }
+      33% {
+        transform: translateY(-20px) translateX(10px);
+      }
+      66% {
+        transform: translateY(10px) translateX(-10px);
+      }
+    }
+
+    /* Login box */
+    .login-box {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(15px);
+      padding: 50px 45px;
+      border-radius: 20px;
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        0 1px 0 rgba(255, 255, 255, 0.5) inset,
+        0 -1px 0 rgba(0, 0, 0, 0.03) inset;
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+      animation: fadeInUp 0.6s ease-out;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .login-box h2 {
+      margin-bottom: 8px;
+      color: #1a1a2e;
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #1a1a2e 0%, #4a6cf7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .login-box .subtitle {
+      color: #666;
+      font-size: 15px;
+      margin-bottom: 40px;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #444;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+    }
+    
+    .login-box input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 1.5px solid #e1e7ff;
+      border-radius: 12px;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      background: #f8faff;
+      color: #333;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    }
+    
+    .login-box input:focus {
+      outline: none;
+      border-color: #4a6cf7;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(74, 108, 247, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .login-box input::placeholder {
+      color: #a0a7c2;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 18px;
+      top: 42px;
+      color: #a0a7c2;
+      font-size: 18px;
+    }
+    
+    .login-box button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-box button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #3a5ce5 0%, #6a54e5 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .login-box button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(74, 108, 247, 0.4);
+    }
+
+    .login-box button:hover::after {
+      opacity: 1;
+    }
+
+    .login-box button:active {
+      transform: translateY(0);
+    }
+
+    .login-box button span {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .login-box p {
+      margin-top: 28px;
+      font-size: 15px;
+      color: #666;
+    }
+    
+    .login-box a {
+      color: #4a6cf7;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .login-box a:hover {
+      color: #3a5ce5;
+      text-decoration: none;
+    }
+
+    .login-box a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #4a6cf7;
+      transition: width 0.3s ease;
+    }
+
+    .login-box a:hover::after {
+      width: 100%;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 32px 0;
+      color: #a0a7c2;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e1e7ff, transparent);
+    }
+
+    .divider span {
+      padding: 0 15px;
+      background: white;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+      font-size: 14px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 16px 25px;
+      }
+      
+      .navbar .logo {
+        font-size: 20px;
+      }
+      
+      .navbar .menu a {
+        padding: 9px 18px;
+        font-size: 14px;
+      }
+      
+      .login-box {
+        padding: 40px 30px;
+        max-width: 400px;
+      }
+
+      .login-box h2 {
+        font-size: 28px;
+      }
+
+      .circle-1, .circle-2, .circle-3 {
+        opacity: 0.5;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-box {
+        padding: 35px 25px;
+        border-radius: 16px;
+        margin: 0 15px;
+      }
+
+      .login-box h2 {
+        font-size: 26px;
+      }
+
+      .navbar .menu {
+        gap: 5px;
+      }
+
+      .navbar .menu a {
+        padding: 8px 14px;
+      }
+
+      .logo-text {
+        font-size: 20px;
+      }
+
+      .navbar .logo img {
+        height: 40px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Floating circles -->
+  <div class="floating-circle circle-1"></div>
+  <div class="floating-circle circle-2"></div>
+  <div class="floating-circle circle-3"></div>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">
+      <div class="logo-text">Bhada Sewa</div>
+    </div>
+    <div class="menu">
+      <a href="register.html">Register</a>
+    </div>
+  </div>
+
+  <!-- Login Form -->
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Sign in to your Bhadasewa account to continue</p>
+      <form action="login" method="post">
+        <div class="input-group">
+          <label for="username">Email Address</label>
+          <input type="text" id="username" name="username" placeholder="Enter your email address" required>
+          <div class="input-icon"><i class="fas fa-envelope"></i></div>
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+          <div class="input-icon"><i class="fas fa-lock"></i></div>
+        </div>
+        <button type="submit"><span>Sign In</span></button>
+      </form>
+      <div class="divider">
+        <span>New to Bhadasewa?</span>
+      </div>
+      <p>Don't have an account? <a href="register.html">Create one now</a></p>
+    </div>
+  </div>
+
+
+</body>
+</html>

@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile - Bhadasewa</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Subtle background pattern */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            radial-gradient(circle at 15% 50%, rgba(74, 108, 247, 0.05) 0%, transparent 20%),
+            radial-gradient(circle at 85% 30%, rgba(74, 108, 247, 0.05) 0%, transparent 20%),
+            radial-gradient(circle at 50% 80%, rgba(74, 108, 247, 0.05) 0%, transparent 20%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Floating circles decoration */
+    .floating-circle {
+        position: fixed;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(74, 108, 247, 0.08), transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .circle-1 {
+        width: 200px;
+        height: 200px;
+        top: 10%;
+        left: 5%;
+        animation: float 20s infinite ease-in-out;
+    }
+
+    .circle-2 {
+        width: 150px;
+        height: 150px;
+        bottom: 15%;
+        right: 8%;
+        animation: float 25s infinite ease-in-out reverse;
+    }
+
+    .circle-3 {
+        width: 100px;
+        height: 100px;
+        top: 60%;
+        left: 15%;
+        animation: float 15s infinite ease-in-out;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0) translateX(0);
+        }
+        33% {
+            transform: translateY(-20px) translateX(10px);
+        }
+        66% {
+            transform: translateY(10px) translateX(-10px);
+        }
+    }
+
+    /* Navbar */
+    .navbar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 18px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .navbar .logo {
+        font-size: 24px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        letter-spacing: -0.5px;
+    }
+
+    .navbar .logo::before {
+        content: '🏠';
+        font-size: 28px;
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    .navbar .menu {
+        display: flex;
+        gap: 15px;
+    }
+
+    .navbar .menu a {
+        color: #555;
+        text-decoration: none;
+        padding: 10px 22px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid transparent;
+    }
+
+    .navbar .menu a:hover {
+        background: #f0f4ff;
+        color: #4a6cf7;
+        border: 1px solid rgba(74, 108, 247, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(74, 108, 247, 0.1);
+    }
+
+    /* Main Container */
+    .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 
+            0 10px 30px rgba(0, 0, 0, 0.08),
+            0 1px 0 rgba(255, 255, 255, 0.5) inset;
+        position: relative;
+        z-index: 1;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        animation: slideUp 0.6s ease-out;
+    }
+
+    .container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Profile Header */
+    .profile-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .profile-header h1 {
+        color: #1a1a2e;
+        font-size: 36px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #1a1a2e 0%, #4a6cf7 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+    }
+
+    .profile-header .subtitle {
+        color: #666;
+        font-size: 15px;
+        font-weight: 400;
+    }
+
+    /* Profile Info */
+    .profile-info {
+        background: rgba(74, 108, 247, 0.05);
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid rgba(74, 108, 247, 0.1);
+        margin-bottom: 40px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 15px;
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #e1e7ff;
+        transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(74, 108, 247, 0.1);
+        border-color: #4a6cf7;
+    }
+
+    .info-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #4a6cf7 0%, #7b64ff 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .info-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    .info-value {
+        font-size: 16px;
+        color: #1a1a2e;
+        font-weight: 600;
+    }
+
+    /* Posts Section - Hidden by default */
+    .posts-section {
+        margin-top: 40px;
+        padding-top: 40px;
+        border-top: 2px solid rgba(74, 108, 247, 0.1);
+        display: none; /* Hidden initially */
+    }
+
+    .posts-section h2 {
+        color: #1a1a2e;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #1a1a2e 0%, #4a6cf7 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+    }
+
+    .posts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .post-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 
+            0 10px 30px rgba(0, 0, 0, 0.08),
+            0 1px 0 rgba(255, 255, 255, 0.5) inset;
+        transition: all 0.4s ease;
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .post-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+        opacity: 0.8;
+    }
+
+    .post-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .post-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .post-card:hover .post-image {
+        transform: scale(1.05);
+    }
+
+    .post-details {
+        padding: 25px;
+    }
+
+    .post-title {
+        font-weight: 700;
+        font-size: 20px;
+        margin-bottom: 12px;
+        color: #1a1a2e;
+        line-height: 1.3;
+    }
+
+    .post-price {
+        color: #27ae60;
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 10px;
+        padding: 6px 12px;
+        background: rgba(39, 174, 96, 0.1);
+        border-radius: 8px;
+        display: inline-block;
+    }
+
+    .post-location {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .post-location i {
+        color: #4a6cf7;
+    }
+
+    .post-category {
+        color: #4a6cf7;
+        font-size: 14px;
+        margin-bottom: 15px;
+        text-transform: capitalize;
+        font-weight: 600;
+        padding: 4px 10px;
+        background: rgba(74, 108, 247, 0.1);
+        border-radius: 6px;
+        display: inline-block;
+    }
+
+    .post-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+    }
+
+    .btn-edit {
+        background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+    }
+
+    .btn-edit:hover {
+        box-shadow: 0 8px 20px rgba(74, 108, 247, 0.4);
+    }
+
+    .btn-delete {
+        background: linear-gradient(90deg, #ff6b6b 0%, #ee5a52 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .btn-delete:hover {
+        box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    .no-posts {
+        text-align: center;
+        color: #666;
+        padding: 50px 20px;
+        font-size: 16px;
+        background: rgba(74, 108, 247, 0.05);
+        border-radius: 15px;
+        border: 1px solid rgba(74, 108, 247, 0.1);
+    }
+
+    .no-posts i {
+        font-size: 48px;
+        color: #a0a7c2;
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    /* Brand mention */
+    .brand-mention {
+        font-size: 14px;
+        color: #4a6cf7;
+        margin-top: 30px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .brand-mention i {
+        font-size: 16px;
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 20px;
+        color: #777;
+        font-size: 14px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        background: rgba(255, 255, 255, 0.9);
+        margin-top: 40px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Error message */
+    #error {
+        color: #ff6b6b;
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 15px;
+        background: rgba(255, 107, 107, 0.1);
+        border-radius: 12px;
+        font-weight: 500;
+        border: 1px solid rgba(255, 107, 107, 0.2);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .navbar {
+            padding: 16px 25px;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .navbar .menu {
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .container {
+            margin: 20px 15px;
+            padding: 25px 20px;
+        }
+
+        .profile-header h1 {
+            font-size: 28px;
+        }
+
+        .posts-section h2 {
+            font-size: 24px;
+        }
+
+        .posts-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .info-item {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .info-icon {
+            margin: 0 auto 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .navbar .logo {
+            font-size: 20px;
+        }
+
+        .navbar .menu a {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .profile-header h1 {
+            font-size: 24px;
+        }
+
+        .post-title {
+            font-size: 18px;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Floating circles -->
+<div class="floating-circle circle-1"></div>
+<div class="floating-circle circle-2"></div>
+<div class="floating-circle circle-3"></div>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">Bhada Sewa</div>
+    <div class="menu">
+        <a href="login.html">Logout</a>
+    </div>
+</div>
+
+<!-- Main Container -->
+<div class="container">
+    <!-- Error message -->
+    <div id="error"></div>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <h1>My Profile</h1>
+        <p class="subtitle">View and manage your account information</p>
+    </div>
+
+    <!-- Profile Info -->
+    <div class="profile-info">
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="info-content">
+                <div class="info-label">Name</div>
+                <div class="info-value" id="name"></div>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="info-content">
+                <div class="info-label">Email</div>
+                <div class="info-value" id="email"></div>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-phone"></i>
+            </div>
+            <div class="info-content">
+                <div class="info-label">Phone</div>
+                <div class="info-value" id="phone"></div>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-user-tag"></i>
+            </div>
+            <div class="info-content">
+                <div class="info-label">Role</div>
+                <div class="info-value" id="role"></div>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-map"></i>
+            </div>
+            <div class="info-content">
+                <div class="info-label">Province</div>
+                <div class="info-value" id="province"></div>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div class="info-content">
+                <div class="info-label">District</div>
+                <div class="info-value" id="district"></div>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="info-content">
+                <div class="info-label">Municipal</div>
+                <div class="info-value" id="municipal"></div>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="info-content">
+                <div class="info-label">Ward Number</div>
+                <div class="info-value" id="ward_num"></div>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="info-content">
+                <div class="info-label">Joined On</div>
+                <div class="info-value" id="created_at"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Posts Section - Will be shown only if user has posts -->
+    <div id="postsSection" class="posts-section">
+        <h2>My Posts</h2>
+        <div id="posts-container" class="posts-grid"></div>
+    </div>
+
+<script>
+// Load profile data
+function loadProfile() {
+    fetch("profile", { 
+        method: "GET", 
+        credentials: "include" 
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(user => {
+        // Fill profile information
+        document.getElementById("name").textContent = user.name || "Not provided";
+        document.getElementById("email").textContent = user.email || "Not provided";
+        document.getElementById("phone").textContent = user.phone || "Not provided";
+        document.getElementById("role").textContent = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "Not specified";
+        document.getElementById("province").textContent = user.province || "Not provided";
+        document.getElementById("district").textContent = user.district || "Not provided";
+        document.getElementById("municipal").textContent = user.municipal || "Not provided";
+        document.getElementById("ward_num").textContent = user.ward_num || "Not provided";
+        document.getElementById("created_at").textContent = user.created_at || "Not available";
+
+        // Only load posts if user is an owner
+        if (user.role === 'owner') {
+            loadUserPosts();
+        }
+    })
+    .catch(err => {
+        console.error("Error loading profile:", err);
+        document.getElementById("error").innerHTML = `
+            <i class="fas fa-exclamation-circle"></i>
+            ${err.message === "Failed to fetch" ? "Cannot connect to server. Please check your internet connection." : "Please login to view your profile."}
+        `;
+        
+        // Redirect to login after 3 seconds if unauthorized
+        if (err.message.includes("401")) {
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 3000);
+        }
+    });
+}
+
+//Load profile data
+function loadProfile() {
+    console.log("Loading profile...");
+    
+    fetch("profile", { 
+        method: "GET", 
+        credentials: "include" 
+    })
+    .then(res => {
+        console.log("Profile response status:", res.status);
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(user => {
+        console.log("Profile data received:", user);
+        
+        // Fill profile information
+        document.getElementById("name").textContent = user.name || "Not provided";
+        document.getElementById("email").textContent = user.email || "Not provided";
+        document.getElementById("phone").textContent = user.phone || "Not provided";
+        document.getElementById("role").textContent = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "Not specified";
+        document.getElementById("province").textContent = user.province || "Not provided";
+        document.getElementById("district").textContent = user.district || "Not provided";
+        document.getElementById("municipal").textContent = user.municipal || "Not provided";
+        document.getElementById("ward_num").textContent = user.ward_num || "Not provided";
+        document.getElementById("created_at").textContent = user.created_at || "Not available";
+
+        // Only load posts if user is an owner
+        if (user.role === 'owner') {
+            console.log("User is owner, loading posts...");
+            loadUserPosts();
+        } else {
+            console.log("User is not owner, not loading posts");
+        }
+    })
+    .catch(err => {
+        console.error("Error loading profile:", err);
+        document.getElementById("error").innerHTML = `
+            <i class="fas fa-exclamation-circle"></i>
+            ${err.message === "Failed to fetch" ? "Cannot connect to server. Please check your internet connection." : "Please login to view your profile."}
+        `;
+        
+        // Redirect to login after 3 seconds if unauthorized
+        if (err.message.includes("401")) {
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 3000);
+        }
+    });
+}
+
+// Load user posts
+function loadUserPosts() {
+    console.log("Loading user posts...");
+    
+    fetch("user-posts", { 
+        method: "GET", 
+        credentials: "include" 
+    })
+    .then(res => {
+        console.log("Posts response status:", res.status);
+        if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+    })
+    .then(posts => {
+        console.log("Posts data received:", posts);
+        
+        const postsSection = document.getElementById("postsSection");
+        const postsContainer = document.getElementById("posts-container");
+        
+        // Check if posts exist and show/hide section accordingly
+        if (posts && Array.isArray(posts) && posts.length > 0) {
+            console.log(`${posts.length} posts found, showing section`);
+            postsSection.style.display = 'block';
+            displayPosts(posts);
+        } else {
+            console.log("No posts found or empty array");
+            // Show posts section with "no posts" message
+            postsSection.style.display = 'block';
+            postsContainer.innerHTML = `
+                <div class="no-posts" style="grid-column: 1 / -1;">
+                    <i class="fas fa-newspaper"></i>
+                    <h3>No posts yet</h3>
+                    <p>You haven't created any rental posts yet.</p>
+                    <a href="post.html" class="btn btn-edit" style="margin-top: 15px;">
+                        <i class="fas fa-plus"></i> Create Your First Post
+                    </a>
+                </div>
+            `;
+        }
+    })
+    .catch(err => {
+        console.error("Error loading posts:", err);
+        // Show error in posts section
+        const postsSection = document.getElementById("postsSection");
+        const postsContainer = document.getElementById("posts-container");
+        
+        postsSection.style.display = 'block';
+        postsContainer.innerHTML = `
+            <div class="no-posts" style="grid-column: 1 / -1;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Error Loading Posts</h3>
+                <p>${err.message}</p>
+                <p>Please try refreshing the page or check if you're logged in.</p>
+                <button class="btn btn-edit" onclick="loadUserPosts()" style="margin-top: 15px;">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+            </div>
+        `;
+    });
+}
+
+// Display posts in the grid
+function displayPosts(posts) {
+    const postsContainer = document.getElementById("posts-container");
+    
+    let postsHTML = '';
+    posts.forEach(post => {
+        const imageUrl = post.image_url || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&h=300&fit=crop';
+        postsHTML += `
+            <div class="post-card">
+                <img src="${imageUrl}" alt="${post.title}" class="post-image">
+                <div class="post-details">
+                    <div class="post-title">${post.title || 'Untitled Post'}</div>
+                    <div class="post-price">Rs. ${post.price || '0'}</div>
+                    <div class="post-location"><i class="fas fa-map-marker-alt"></i> ${post.location || 'Location not specified'}</div>
+                    <div class="post-category">${post.category ? post.category.charAt(0).toUpperCase() + post.category.slice(1) : 'Uncategorized'}</div>
+                    <div class="post-actions">
+                        <button class="btn btn-edit" onclick="editPost(${post.id})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-delete" onclick="deletePost(${post.id})">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    postsContainer.innerHTML = postsHTML;
+}
+
+// Edit post function
+function editPost(postId) {
+    alert(`Edit post ${postId} - This feature would open an edit form`);
+    // Implement edit functionality here
+}
+
+// Delete post function
+function deletePost(postId) {
+    if (confirm("Are you sure you want to delete this post?")) {
+        fetch("delete-post", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "postId=" + postId
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Post deleted successfully!");
+                loadUserPosts(); // Refresh posts
+            } else {
+                alert("Error deleting post: " + (data.error || "Unknown error"));
+            }
+        })
+        .catch(err => {
+            console.error("Error deleting post:", err);
+            alert("Error deleting post. Please try again.");
+        });
+    }
+}
+
+// Load profile when page loads
+document.addEventListener('DOMContentLoaded', loadProfile);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owner Dashboard - Bhadasewa</title>
+<style>
+  * { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  body { 
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Subtle background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(74, 108, 247, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 85% 30%, rgba(74, 108, 247, 0.05) 0%, transparent 20%),
+      radial-gradient(circle at 50% 80%, rgba(74, 108, 247, 0.05) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Floating circles decoration */
+  .floating-circle {
+    position: fixed;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(74, 108, 247, 0.08), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .circle-1 {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: 5%;
+    animation: float 20s infinite ease-in-out;
+  }
+
+  .circle-2 {
+    width: 150px;
+    height: 150px;
+    bottom: 15%;
+    right: 8%;
+    animation: float 25s infinite ease-in-out reverse;
+  }
+
+  .circle-3 {
+    width: 100px;
+    height: 100px;
+    top: 60%;
+    left: 15%;
+    animation: float 15s infinite ease-in-out;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    33% {
+      transform: translateY(-20px) translateX(10px);
+    }
+    66% {
+      transform: translateY(10px) translateX(-10px);
+    }
+  }
+
+  /* Navbar */
+  .navbar { 
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    color: #333;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  }
+  
+  .navbar .logo { 
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.5px;
+  }
+
+  .navbar .logo::before {
+    content: '🏠';
+    font-size: 28px;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  
+  .navbar .menu { 
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .navbar .menu a { 
+    color: #555;
+    text-decoration: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
+  }
+  
+  .navbar .menu a:hover { 
+    background: #f0f4ff;
+    color: #4a6cf7;
+    border: 1px solid rgba(74, 108, 247, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 108, 247, 0.1);
+  }
+  
+  .profile-avatar { 
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #4a6cf7;
+    transition: all 0.3s ease;
+    object-fit: cover;
+  }
+  
+  .profile-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(74, 108, 247, 0.4);
+  }
+  
+  .profile-dropdown { 
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-menu { 
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 180px;
+    animation: slideDown 0.3s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+  }
+
+  .dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .dropdown-menu a { 
+    display: block;
+    padding: 12px 20px;
+    color: #444;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 1px solid #e1e7ff;
+  }
+  
+  .dropdown-menu a:hover { 
+    background: #4a6cf7;
+    color: white;
+    padding-left: 25px;
+  }
+  
+  .profile-dropdown:hover .dropdown-menu { 
+    display: block;
+  }
+
+  /* Layout */
+  .layout { 
+    display: flex;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .sidebar { 
+    width: 260px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 25px;
+    margin: 20px 0 20px 20px;
+    border-radius: 20px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    position: sticky;
+    top: 90px;
+    height: fit-content;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+    animation: slideInLeft 0.5s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+  }
+
+  .sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .sidebar h3 { 
+    margin-bottom: 15px;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #1a1a2e;
+    background: linear-gradient(90deg, #1a1a2e 0%, #4a6cf7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+  }
+
+  .sidebar h3:first-child {
+    margin-top: 0;
+  }
+  
+  .sidebar a { 
+    display: block;
+    margin: 10px 0;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #444;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1.5px solid #e1e7ff;
+    background: #f8faff;
+  }
+
+  .sidebar a:hover { 
+    background: #4a6cf7;
+    color: white;
+    padding-left: 20px;
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(74, 108, 247, 0.2);
+  }
+
+  .main-content { 
+    flex: 1;
+    padding: 20px;
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .search-section { 
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+    animation: slideDown 0.5s ease-out;
+  }
+  
+  .search-section input { 
+    flex: 1;
+    padding: 16px 24px;
+    border: 1.5px solid #e1e7ff;
+    border-radius: 12px;
+    outline: none;
+    font-size: 15px;
+    background: #f8faff;
+    color: #333;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  }
+
+  .search-section input:focus {
+    border-color: #4a6cf7;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(74, 108, 247, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .search-section input::placeholder {
+    color: #a0a7c2;
+  }
+  
+  .search-section button { 
+    padding: 16px 32px;
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .search-section button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #3a5ce5 0%, #6a54e5 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .search-section button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(74, 108, 247, 0.4);
+  }
+
+  .search-section button:hover::after {
+    opacity: 1;
+  }
+
+  .search-section button span {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .post-btn { 
+    background: linear-gradient(90deg, #27ae60 0%, #1e8449 100%);
+    color: white;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .post-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #219653 0%, #186138 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .post-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4);
+  }
+
+  .post-btn:hover::after {
+    opacity: 1;
+  }
+
+  .post-btn span {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Posts Feed */
+  .post { 
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.08),
+      0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    padding: 25px;
+    margin-bottom: 25px;
+    transition: all 0.4s ease;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    animation: fadeInUp 0.5s ease-out;
+  }
+
+  .post::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+    opacity: 0.8;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  }
+  
+  .post-img { 
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    transition: transform 0.4s ease;
+  }
+
+  .post:hover .post-img {
+    transform: scale(1.02);
+  }
+  
+  .post-header { 
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(74, 108, 247, 0.05);
+    border-radius: 12px;
+  }
+  
+  .owner-avatar { 
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 12px;
+    border: 2px solid #4a6cf7;
+    object-fit: cover;
+  }
+
+  .owner-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .owner-name {
+    font-weight: 600;
+    color: #1a1a2e;
+    font-size: 15px;
+  }
+
+  .post-date {
+    font-size: 13px;
+    color: #666;
+  }
+  
+  .post-actions { 
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .post h4 { 
+    margin-bottom: 12px;
+    color: #1a1a2e;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  
+  .post p { 
+    margin: 8px 0;
+    color: #666;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .post p::before {
+    content: '•';
+    color: #4a6cf7;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .post p:has(a) {
+    gap: 12px;
+  }
+
+  .post p a {
+    font-size: 18px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+    display: inline-block;
+    color: #4a6cf7;
+  }
+
+  .post p a:hover {
+    transform: scale(1.2);
+    color: #3a5ce5;
+  }
+  
+  .post .view-btn { 
+    padding: 12px 24px;
+    background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .post .view-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #e67e22 0%, #d35400 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .post .view-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(243, 156, 18, 0.4);
+  }
+
+  .post .view-btn:hover::after {
+    opacity: 1;
+  }
+
+  .post .view-btn span {
+    position: relative;
+    z-index: 2;
+  }
+
+  .post-actions a {
+    text-decoration: none;
+  }
+  
+  .request-btn { 
+    padding: 12px 24px;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .request-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .request-btn:hover {
+    transform: translateY(-3px);
+  }
+
+  .request-btn:hover::after {
+    opacity: 1;
+  }
+
+  .request-btn span {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .accept-btn { 
+    background: linear-gradient(90deg, #27ae60 0%, #1e8449 100%);
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+  }
+
+  .accept-btn::after {
+    background: linear-gradient(90deg, #219653 0%, #186138 100%);
+  }
+
+  .accept-btn:hover {
+    box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4);
+  }
+  
+  .decline-btn { 
+    background: linear-gradient(90deg, #ff6b6b 0%, #ee5a52 100%);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  }
+
+  .decline-btn::after {
+    background: linear-gradient(90deg, #ee5a52 0%, #d63031 100%);
+  }
+
+  .decline-btn:hover {
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+  }
+
+  /* Brand mention */
+  .brand-mention {
+    font-size: 14px;
+    color: #4a6cf7;
+    margin-top: 30px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .brand-mention i {
+    font-size: 16px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-size: 14px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.9);
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Responsive design */
+  @media (max-width: 1024px) {
+    .layout {
+      flex-direction: column;
+    }
+
+    .sidebar {
+      width: 100%;
+      margin: 20px;
+      position: static;
+      max-height: none;
+    }
+
+    .sidebar a {
+      display: inline-block;
+      margin: 5px;
+    }
+
+    .main-content {
+      padding: 20px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 16px 25px;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .navbar .menu {
+      width: 100%;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .logo {
+      font-size: 20px;
+    }
+
+    .search-section {
+      flex-direction: column;
+    }
+
+    .search-section button {
+      width: 100%;
+    }
+
+    .post-img {
+      height: 200px;
+    }
+
+    .post h4 {
+      font-size: 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .navbar {
+      padding: 12px 15px;
+    }
+
+    .logo {
+      font-size: 18px;
+    }
+
+    .navbar .menu a {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    .post-actions {
+      flex-direction: column;
+    }
+
+    .post .view-btn,
+    .request-btn {
+      width: 100%;
+    }
+
+    .search-section input,
+    .search-section button {
+      padding: 14px 20px;
+      font-size: 14px;
+    }
+  }
+
+  /* Custom scrollbar */
+  .sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sidebar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #4a6cf7 0%, #7b64ff 100%);
+    border-radius: 10px;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #7b64ff 0%, #4a6cf7 100%);
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating circles -->
+<div class="floating-circle circle-1"></div>
+<div class="floating-circle circle-2"></div>
+<div class="floating-circle circle-3"></div>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="logo">Bhada Sewa</div>
+  <div class="menu">
+   <a href="savepost.html" >Saved Post</a>
+   <a href="request.html" >Request</a>
+    <a href="profile.html">Profile</a>
+    <a href="login.html">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Layout -->
+<div class="layout">
+  <div class="sidebar">
+    <h3>Sections</h3>
+    <a id="postsLink">Posts</a>
+    <h3>Categories</h3>
+    <a onclick="filterCategory('house')">House</a>
+    <a onclick="filterCategory('room')">Room</a>
+    <a onclick="filterCategory('flat')">Flat</a>
+    <a onclick="filterCategory('vehicle')">Vehicle</a>
+    <a onclick="filterCategory('all')">All</a>
+  </div>
+
+  <div class="main-content">
+    <div class="search-section">
+      <input type="text" placeholder="Search rentals by keyword or location">
+      <button>Search</button>
+    </div>
+
+    <a href="post.html" class="post-btn">Create New Post</a>
+
+    <!-- Dynamic feed container -->
+    <div id="feed"></div>
+
+<script>
+const feedContainer = document.getElementById('feed');
+const postsLink = document.getElementById('postsLink');
+const requestsLink = document.getElementById('requestsLink');
+
+// Function to fetch and render posts
+function loadPosts() {
+  fetch('feed')
+    .then(response => response.json())
+    .then(data => {
+      feedContainer.innerHTML = '';
+      data.forEach(post => {
+        const postDiv = document.createElement('div');
+        postDiv.classList.add('post');
+        postDiv.innerHTML = `
+          <img src="/images/loginbg.jpg" alt="Flat Image" class="post-img">
+          <div class="post-header">
+            <img src="/images/profile.jpg" alt="Owner" class="owner-avatar">
+            <div class="owner-info">
+              <span class="owner-name">${post.ownerName}</span>
+              <span class="post-date">Posted on: ${new Date(post.createdAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+          <h4>${post.title}</h4>
+          <p>Price: Rs. ${post.price}</p>
+          <p>Location: ${post.location} 
+            <a href="https://www.google.com/maps?q=${encodeURIComponent(post.location)}" target="_blank">📍</a>
+          </p>
+          <div class="post-actions">
+            <a href="postDetails.html?id=${post.id}"><button class="view-btn">View Details</button></a>
+          </div>
+        `;
+        feedContainer.appendChild(postDiv);
+      });
+    })
+    .catch(error => console.error('Error fetching feed:', error));
+}
+
+// Function to fetch and render requests
+function loadRequests() {
+  fetch('requests') // Requests servlet endpoint
+    .then(response => response.json())
+    .then(data => {
+      feedContainer.innerHTML = '';
+      data.forEach(req => {
+        const reqDiv = document.createElement('div');
+        reqDiv.classList.add('post');
+        reqDiv.innerHTML = `
+          <h4>Request from: ${req.userName}</h4>
+          <p>Post: ${req.postTitle}</p>
+          <p>Status: ${req.status}</p>
+          <div class="post-actions">
+            ${req.status === 'pending' ? `<button class="request-btn accept-btn" onclick="acceptRequest(${req.id})">Accept</button>
+                                          <button class="request-btn decline-btn" onclick="declineRequest(${req.id})">Decline</button>` : ''}
+          </div>
+        `;
+        feedContainer.appendChild(reqDiv);
+      });
+    })
+    .catch(error => console.error('Error fetching requests:', error));
+}
+
+// Sidebar toggles
+postsLink.addEventListener('click', e => {
+  e.preventDefault();
+  loadPosts();
+});
+requestsLink.addEventListener('click', e => {
+  e.preventDefault();
+  loadRequests();
+});
+
+// Accept / Decline request
+function acceptRequest(id) {
+  fetch(`acceptRequest?id=${id}`, { method: 'POST' })
+    .then(res => res.text())
+    .then(msg => { alert(msg); loadRequests(); });
+}
+
+function declineRequest(id) {
+  fetch(`declineRequest?id=${id}`, { method: 'POST' })
+    .then(res => res.text())
+    .then(msg => { alert(msg); loadRequests(); });
+}
+
+// Load posts by default
+loadPosts();
+
+
+
+function loadRequests() {
+  fetch('ownerRequests')
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to load requests');
+      return response.json();
+    })
+    .then(requests => {
+      feedContainer.innerHTML = '';
+      
+      if (requests.length === 0) {
+        feedContainer.innerHTML = `
+          <div class="post">
+            <h4>No Rental Requests</h4>
+            <p>You don't have any rental requests yet.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      requests.forEach(req => {
+        const postDiv = document.createElement('div');
+        postDiv.classList.add('post');
+        
+        let statusBadge = '';
+        if (req.status === 'pending') {
+          statusBadge = '<span style="background:#f39c12; color:white; padding:4px 10px; border-radius:12px; font-size:12px; margin-left:10px;">PENDING</span>';
+        } else if (req.status === 'approved') {
+          statusBadge = '<span style="background:#27ae60; color:white; padding:4px 10px; border-radius:12px; font-size:12px; margin-left:10px;">APPROVED</span>';
+        } else if (req.status === 'rejected') {
+          statusBadge = '<span style="background:#e74c3c; color:white; padding:4px 10px; border-radius:12px; font-size:12px; margin-left:10px;">REJECTED</span>';
+        }
+        
+        postDiv.innerHTML = `
+          <div class="post-header">
+            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(req.renter_name)}&background=4a6cf7&color=fff" alt="Renter" class="owner-avatar">
+            <div class="owner-info">
+              <span class="owner-name">${req.renter_name} ${statusBadge}</span>
+              <span class="post-date">Requested on: ${new Date(req.created_at).toLocaleDateString()}</span>
+            </div>
+          </div>
+          <h4>${req.post_title}</h4>
+          <p><strong>Message:</strong> ${req.message || 'No message provided'}</p>
+          <p><strong>Renter Contact:</strong> ${req.renter_phone} | ${req.renter_email}</p>
+          <p><strong>Price:</strong> Rs. ${req.price}</p>
+          <p><strong>Location:</strong> ${req.location}</p>
+          <div class="post-actions">
+            ${req.status === 'pending' ? 
+              `<button class="request-btn accept-btn" onclick="updateRequestStatus(${req.id}, 'approved')">Accept Request</button>
+               <button class="request-btn decline-btn" onclick="updateRequestStatus(${req.id}, 'rejected')">Decline Request</button>` : 
+              `<button class="view-btn" onclick="viewPost(${req.post_id})">View Post</button>`}
+          </div>
+        `;
+        feedContainer.appendChild(postDiv);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching requests:', error);
+      feedContainer.innerHTML = `<div class="post"><p>Error loading requests</p></div>`;
+    });
+}
+
+function updateRequestStatus(requestId, status) {
+  if (!confirm(`Are you sure you want to ${status} this request?`)) return;
+  
+  fetch(`updateRequestStatus?requestId=${requestId}&status=${status}`, {
+    method: 'POST'
+  })
+    .then(response => response.text())
+    .then(message => {
+      alert(message);
+      loadRequests(); // Refresh the list
+    })
+    .catch(error => {
+      console.error('Error updating request:', error);
+      alert('Failed to update request');
+    });
+}
+
+function viewPost(postId) {
+  window.location.href = `postDetails.html?id=${postId}`;
+}
+
+
+
+function loadMyRequests() {
+  // You can implement this to show renter's sent requests
+  alert("This will show your sent requests. Implementation pending.");
+}
+
+function loadNotifications() {
+  window.location.href = "notifications.html";
+}
+
+function viewPost(postId) {
+  window.location.href = `postDetails.html?id=${postId}`;
+}
+</script>
+
+</body>
+</html>
